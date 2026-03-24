@@ -113,13 +113,15 @@ async function main() {
           }
         }
 
-        function buildImageMapping(targetFilePath) {
+        function buildImageMapping(targetFilePath, platform = 'Zenn') {
           return imageDownloads.reduce((map, entry) => {
             const relative = path.relative(path.dirname(targetFilePath), entry.path).replace(/\\/g, '/');
             const safeRelative = relative.startsWith('.') ? relative : `./${relative}`;
             const baseName = path.basename(entry.path); // saved file name
-            const pathFromImages = `../images/${baseName}`;
             const pathFromRoot = `/images/${baseName}`;
+
+            // Zennは絶対パス（/images/...）推奨。Qiitaは相対パスでCLIが処理。
+            const targetPath = platform === 'Zenn' ? pathFromRoot : safeRelative;
 
             const urlWithoutQuery = entry.urlNoQuery || entry.url;
             const encodedName = path.basename(urlWithoutQuery);
@@ -127,14 +129,12 @@ async function main() {
               try { return decodeURIComponent(encodedName); } catch { return encodedName; }
             })();
 
-            map[entry.url] = safeRelative;
-            if (entry.urlNoQuery) map[entry.urlNoQuery] = safeRelative;
-            map[urlWithoutQuery] = safeRelative;
-            map[encodedName] = safeRelative;
-            map[decodedName] = safeRelative;
-            map[pathFromImages] = safeRelative;
-            map[pathFromRoot] = safeRelative;
-            map[baseName] = safeRelative;
+            map[entry.url] = targetPath;
+            if (entry.urlNoQuery) map[entry.urlNoQuery] = targetPath;
+            map[urlWithoutQuery] = targetPath;
+            map[encodedName] = targetPath;
+            map[decodedName] = targetPath;
+            map[baseName] = targetPath;
 
             return map;
           }, {});
@@ -142,7 +142,7 @@ async function main() {
 
         // Zennに投稿する場合
         if (metadata.platforms.includes('Zenn')) {
-          const zennContent = generateZennFrontmatter(metadata) + replaceImagePaths(markdown, buildImageMapping(path.join(ARTICLES_DIR, generateFileName(metadata.slug))));
+          const zennContent = generateZennFrontmatter(metadata) + replaceImagePaths(markdown, buildImageMapping(path.join(ARTICLES_DIR, generateFileName(metadata.slug)), 'Zenn'));
           const fileName = generateFileName(metadata.slug);
           const filePath = path.join(ARTICLES_DIR, fileName);
 
@@ -153,7 +153,7 @@ async function main() {
 
         // Qiitaに投稿する場合
         if (metadata.platforms.includes('Qiita')) {
-          const qiitaContent = generateQiitaFrontmatter(metadata) + replaceImagePaths(markdown, buildImageMapping(path.join(PUBLIC_DIR, generateFileName(metadata.slug))));
+          const qiitaContent = generateQiitaFrontmatter(metadata) + replaceImagePaths(markdown, buildImageMapping(path.join(PUBLIC_DIR, generateFileName(metadata.slug)), 'Qiita'));
           const fileName = generateFileName(metadata.slug);
           const filePath = path.join(PUBLIC_DIR, fileName);
 

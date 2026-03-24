@@ -98,8 +98,6 @@ export function replaceImagePaths(markdown, imageMapping = {}) {
         decodedUrl,
         decodedUrlNoQuery,
         basename,
-        `%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_${basename}`,
-        `../images/${basename}`,
         `/images/${basename}`
       ];
 
@@ -116,8 +114,14 @@ export function replaceImagePaths(markdown, imageMapping = {}) {
         imagePath = `/images/${basename}`;
       }
 
-      // 不要なエンコード付きaltはそのまま表示が壊れるので、解読は保留
-      const finalAlt = alt;
+      // altテキストをデコード
+      const finalAlt = (() => {
+        try {
+          return decodeURIComponent(alt);
+        } catch {
+          return alt;
+        }
+      })();
 
       return `![${finalAlt}](${imagePath})`;
     }
