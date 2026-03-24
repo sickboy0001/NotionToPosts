@@ -1,5 +1,6 @@
 # Notion-to-TechBlog Sync
 
+
 Notionを執筆エディタとし、GitHub ActionsでZennおよびQiitaへ記事を自動同期・公開するシステムです。
 
 ## 📋 機能

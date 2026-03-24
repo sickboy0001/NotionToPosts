@@ -19,12 +19,12 @@ Notion-to-TechBlog Sync システムの初期セットアップ手順です。
    - https://www.notion.so/my-integrations にアクセス
 
 2. **新しいIntegrationを作成**
-   - 「Create new integration」をクリック
+   - 「Create new integration」「新しいインテグレーション」をクリック
    - 名前を入力（例：「TechBlog Sync」）
    - 「Submit」をクリック
 
 3. **API Token をコピー**
-   - 「Internal Integration Secret」をコピー
+   - 「Internal Integration Secret」「内部インテグレーションシークレット」をコピー
    - `.env` ファイルの `NOTION_TOKEN` に貼付
 
 ### Step 2: Notionデータベースの準備
