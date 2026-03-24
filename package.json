@@ -1,0 +1,35 @@
+{
+  "name": "notion-to-techblog-sync",
+  "version": "1.0.0",
+  "description": "Automatically sync articles from Notion to Zenn and Qiita",
+  "type": "module",
+  "main": "scripts/sync-notion.js",
+  "scripts": {
+    "sync": "node scripts/sync-notion.js",
+    "sync:test": "node scripts/sync-notion.js --test-mode --limit 1",
+    "lint": "eslint scripts src",
+    "dev": "node --watch scripts/sync-notion.js"
+  },
+  "keywords": [
+    "notion",
+    "zenn",
+    "qiita",
+    "automation",
+    "github-actions"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@notionhq/client": "^2.2.12",
+    "notion-to-md": "^3.1.0",
+    "dotenv": "^16.3.1",
+    "gray-matter": "^4.0.3",
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.54.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
