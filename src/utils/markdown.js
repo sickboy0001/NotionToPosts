@@ -77,27 +77,41 @@ export function replaceImagePaths(markdown, imageMapping = {}) {
     (match, alt, url) => {
       // 指定URLが直接マッピングされているか
       let imagePath = imageMapping[url];
-
-      if (!imagePath) {
-        // URLデコード版を試す
+      const urlNoQuery = url.split('?')[0];
+      const decodedUrl = (() => {
         try {
-          const decodedUrl = decodeURIComponent(url);
-          imagePath = imageMapping[decodedUrl];
+          return decodeURIComponent(url);
         } catch {
-          imagePath = null;
+          return url;
         }
+      })();
+      const decodedUrlNoQuery = (() => {
+        try {
+          return decodeURIComponent(urlNoQuery);
+        } catch {
+          return urlNoQuery;
+        }
+      })();
+
+      const candidates = [
+        url,
+        urlNoQuery,
+        decodedUrl,
+        decodedUrlNoQuery,
+        path.basename(urlNoQuery),
+        path.basename(decodedUrlNoQuery)
+      ];
+
+      for (const candidate of candidates) {
+        if (imagePath) break;
+        if (!candidate) continue;
+        imagePath = imageMapping[candidate];
       }
 
       if (!imagePath) {
-        // 0階層パス（ローカル相対パス）をマッピングに合わせて変換
-        const basename = path.basename(url);
-        if (basename) {
-          Object.entries(imageMapping).forEach(([key, value]) => {
-            if (path.basename(key) === basename) {
-              imagePath = value;
-            }
-          });
-        }
+        // root imagesディレクトリを試す
+        const rootImage = `/images/${path.basename(urlNoQuery)}`;
+        imagePath = imageMapping[rootImage] || null;
       }
 
       if (imagePath) {

@@ -107,7 +107,8 @@ async function main() {
 
             const success = await downloadImage(image.url, imagePath);
             if (success) {
-              imageDownloads.push({ url: image.url, path: imagePath });
+              const cleanUrl = image.url.split('?')[0];
+              imageDownloads.push({ url: image.url, urlNoQuery: cleanUrl, path: imagePath });
             }
           }
         }
@@ -115,7 +116,15 @@ async function main() {
         function buildImageMapping(targetFilePath) {
           return imageDownloads.reduce((map, entry) => {
             const relative = path.relative(path.dirname(targetFilePath), entry.path).replace(/\\/g, '/');
-            map[entry.url] = relative.startsWith('.') ? relative : `./${relative}`;
+            const safeRelative = relative.startsWith('.') ? relative : `./${relative}`;
+            const rootImagePath = `/images/${path.basename(entry.path)}`;
+
+            map[entry.url] = safeRelative;
+            if (entry.urlNoQuery) map[entry.urlNoQuery] = safeRelative;
+            map[path.basename(entry.url.split('?')[0])] = safeRelative;
+            map[path.basename(entry.urlNoQuery)] = safeRelative;
+            map[rootImagePath] = rootImagePath;
+
             return map;
           }, {});
         }
