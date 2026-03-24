@@ -51,7 +51,7 @@ jobs:
             if git diff --cached --quiet; then
               echo "No staged changes to commit"
             else
-              git commit -m "chore: sync notion articles [skip ci]"
+              git commit -m "chore: sync notion articles"
               git push
             fi
           fi
