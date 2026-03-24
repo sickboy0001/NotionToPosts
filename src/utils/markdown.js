@@ -73,12 +73,37 @@ private: ${isPrivate ? 'true' : 'false'}
  */
 export function replaceImagePaths(markdown, imageMapping = {}) {
   return markdown.replace(
-    /!\[([^\]]*)\]\((https?:\/\/[^)\s]+)(?:\s+"[^"]*")?\)/g,
+    /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,
     (match, alt, url) => {
-      const imagePath = imageMapping[url];
+      // 指定URLが直接マッピングされているか
+      let imagePath = imageMapping[url];
+
+      if (!imagePath) {
+        // URLデコード版を試す
+        try {
+          const decodedUrl = decodeURIComponent(url);
+          imagePath = imageMapping[decodedUrl];
+        } catch {
+          imagePath = null;
+        }
+      }
+
+      if (!imagePath) {
+        // 0階層パス（ローカル相対パス）をマッピングに合わせて変換
+        const basename = path.basename(url);
+        if (basename) {
+          Object.entries(imageMapping).forEach(([key, value]) => {
+            if (path.basename(key) === basename) {
+              imagePath = value;
+            }
+          });
+        }
+      }
+
       if (imagePath) {
         return `![${alt}](${imagePath})`;
       }
+
       return match;
     }
   );

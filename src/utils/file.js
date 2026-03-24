@@ -55,6 +55,16 @@ export function fileExists(filePath) {
 }
 
 /**
+ * ファイル名を安全に正規化
+ */
+export function sanitizeFileName(name) {
+  const decoded = name ? `${name}` : 'file';
+  const normalized = decoded.normalize('NFKD');
+  const replaced = normalized.replace(/[^\w\-.]/g, '_').replace(/_+/g, '_');
+  return replaced.replace(/^_+|_+$/g, '') || 'file';
+}
+
+/**
  * ファイル内容を読む
  */
 export function readFile(filePath) {
@@ -86,9 +96,10 @@ export function listFiles(dirPath) {
  */
 export function generateFileName(slug) {
   // スラッグを正規化（安全なファイル名に）
-  return slug
+  const safeSlug = `${slug}`
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, '-')
     .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '') + '.md';
+    .replace(/^-|-$/g, '') || 'article';
+  return `${safeSlug}.md`;
 }

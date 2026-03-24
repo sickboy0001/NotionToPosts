@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { getPublishedArticles, extractMetadata } from '../src/utils/notion.js';
 import { convertToMarkdown, generateZennFrontmatter, generateQiitaFrontmatter, extractImageUrls, replaceImagePaths } from '../src/utils/markdown.js';
-import { writeFile, downloadImage, generateFileName, readFile } from '../src/utils/file.js';
+import { writeFile, downloadImage, generateFileName, sanitizeFileName, readFile } from '../src/utils/file.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -92,13 +92,18 @@ async function main() {
 
           for (const image of imageUrls) {
             const rawName = path.basename(new URL(image.url).pathname);
-            const decodedName = decodeURIComponent(rawName);
-            const safeName = decodedName
-              .normalize('NFKD')
-              .replace(/[^\w\-.]/g, '_')
-              .replace(/_+/g, '_');
-            const fileName = safeName || 'image';
+            const decodedName = (() => {
+              try {
+                return decodeURIComponent(rawName);
+              } catch {
+                return rawName;
+              }
+            })();
+            const fileName = sanitizeFileName(decodedName || rawName || 'image');
             const imagePath = path.join(IMAGES_DIR, fileName);
+
+            console.log(`   ⚙ image original URL: ${image.url}`);
+            console.log(`   ⚙ image filename: ${fileName}`);
 
             const success = await downloadImage(image.url, imagePath);
             if (success) {
