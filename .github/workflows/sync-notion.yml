@@ -1,5 +1,8 @@
 name: Sync Notion to Zenn/Qiita
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   workflow_dispatch:
   schedule:
@@ -12,8 +15,6 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repository
