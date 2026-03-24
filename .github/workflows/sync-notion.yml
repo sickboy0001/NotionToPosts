@@ -6,8 +6,8 @@ env:
 on:
   workflow_dispatch:
   schedule:
-    # 毎日午前9時（JST = UTC+9）に実行
-    - cron: "0 0 * * *"
+    # 30分おきに実行
+    - cron: "*/30 * * * *"
 
 permissions:
   contents: write
