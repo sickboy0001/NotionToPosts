@@ -8,9 +8,10 @@ node_modules/
 yarn.lock
 
 # Output files
-articles/*.md
-public/*.md
-images/
+# NOTE: articles/public/images は自動生成更新対象のため、CIでコミットする場合はこの除外を削除してください
+# articles/*.md
+# public/*.md
+# images/
 
 # IDE
 .vscode/
