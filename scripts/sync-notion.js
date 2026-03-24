@@ -117,13 +117,24 @@ async function main() {
           return imageDownloads.reduce((map, entry) => {
             const relative = path.relative(path.dirname(targetFilePath), entry.path).replace(/\\/g, '/');
             const safeRelative = relative.startsWith('.') ? relative : `./${relative}`;
-            const rootImagePath = `/images/${path.basename(entry.path)}`;
+            const baseName = path.basename(entry.path); // saved file name
+            const pathFromImages = `../images/${baseName}`;
+            const pathFromRoot = `/images/${baseName}`;
+
+            const urlWithoutQuery = entry.urlNoQuery || entry.url;
+            const encodedName = path.basename(urlWithoutQuery);
+            const decodedName = (() => {
+              try { return decodeURIComponent(encodedName); } catch { return encodedName; }
+            })();
 
             map[entry.url] = safeRelative;
             if (entry.urlNoQuery) map[entry.urlNoQuery] = safeRelative;
-            map[path.basename(entry.url.split('?')[0])] = safeRelative;
-            map[path.basename(entry.urlNoQuery)] = safeRelative;
-            map[rootImagePath] = rootImagePath;
+            map[urlWithoutQuery] = safeRelative;
+            map[encodedName] = safeRelative;
+            map[decodedName] = safeRelative;
+            map[pathFromImages] = safeRelative;
+            map[pathFromRoot] = safeRelative;
+            map[baseName] = safeRelative;
 
             return map;
           }, {});

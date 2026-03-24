@@ -75,8 +75,6 @@ export function replaceImagePaths(markdown, imageMapping = {}) {
   return markdown.replace(
     /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,
     (match, alt, url) => {
-      // 指定URLが直接マッピングされているか
-      let imagePath = imageMapping[url];
       const urlNoQuery = url.split('?')[0];
       const decodedUrl = (() => {
         try {
@@ -92,33 +90,36 @@ export function replaceImagePaths(markdown, imageMapping = {}) {
           return urlNoQuery;
         }
       })();
+      const basename = path.basename(urlNoQuery);
 
       const candidates = [
         url,
         urlNoQuery,
         decodedUrl,
         decodedUrlNoQuery,
-        path.basename(urlNoQuery),
-        path.basename(decodedUrlNoQuery)
+        basename,
+        `%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88_${basename}`,
+        `../images/${basename}`,
+        `/images/${basename}`
       ];
 
+      let imagePath = null;
       for (const candidate of candidates) {
-        if (imagePath) break;
         if (!candidate) continue;
-        imagePath = imageMapping[candidate];
+        if (imageMapping[candidate]) {
+          imagePath = imageMapping[candidate];
+          break;
+        }
       }
 
       if (!imagePath) {
-        // root imagesディレクトリを試す
-        const rootImage = `/images/${path.basename(urlNoQuery)}`;
-        imagePath = imageMapping[rootImage] || null;
+        imagePath = `/images/${basename}`;
       }
 
-      if (imagePath) {
-        return `![${alt}](${imagePath})`;
-      }
+      // 不要なエンコード付きaltはそのまま表示が壊れるので、解読は保留
+      const finalAlt = alt;
 
-      return match;
+      return `![${finalAlt}](${imagePath})`;
     }
   );
 }
