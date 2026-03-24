@@ -43,9 +43,17 @@ jobs:
           if git diff --quiet; then
             echo "No changes detected"
           else
-            git add articles/ public/ images/
-            git commit -m "chore: sync notion articles [skip ci]"
-            git push
+            # 変更が含まれるディレクトリのみ追加する（存在しないディレクトリはfailure回避）
+            git add articles/ 2>/dev/null || true
+            git add public/ 2>/dev/null || true
+            git add images/ 2>/dev/null || true
+
+            if git diff --cached --quiet; then
+              echo "No staged changes to commit"
+            else
+              git commit -m "chore: sync notion articles [skip ci]"
+              git push
+            fi
           fi
 
       - name: Publish to Qiita
