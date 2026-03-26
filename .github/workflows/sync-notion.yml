@@ -40,6 +40,14 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
+          # デバッグ：現在のディレクトリと articles/ の状態を確認
+          echo "=== Current directory ==="
+          pwd
+          echo "=== articles/ directory contents ==="
+          ls -la articles/ 2>/dev/null || echo "articles/ directory not found"
+          echo "=== git status before ==="
+          git status
+
           # git status で変更があるか確認
           if git status --porcelain | grep -q .; then
             echo "Changes detected:"
@@ -57,7 +65,14 @@ jobs:
               git push
             fi
           else
-            echo "No changes detected"
+            echo "No changes detected by git status --porcelain"
+            echo "=== Checking if articles exist ==="
+            if [ -d "articles" ] && [ "$(ls -A articles 2>/dev/null)" ]; then
+              echo "articles/ directory exists with files:"
+              ls -la articles/
+            else
+              echo "articles/ directory is empty or does not exist"
+            fi
           fi
 
       - name: Publish to Qiita
