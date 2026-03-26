@@ -57,8 +57,16 @@ jobs:
           # ステージされた変更を確認
           if git diff --cached --quiet; then
             echo "No staged changes to commit"
+            echo "=== Checking file timestamps ==="
+            # ファイルの更新日時を確認
+            if [ -d "articles" ] && [ "$(ls -A articles 2>/dev/null)" ]; then
+              echo "articles/ files and their modification times:"
+              stat articles/* 2>/dev/null | grep -E "(File:|Modify:)" || true
+            fi
             echo "=== git status ==="
             git status
+            echo "=== git diff HEAD ==="
+            git diff HEAD
           else
             echo "Changes staged:"
             git diff --cached --stat
