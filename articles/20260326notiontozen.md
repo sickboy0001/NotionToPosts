@@ -3,7 +3,7 @@ title: "Notionで書いた記事をGitHub Actions経由でZennに自動投稿す
 emoji: ":tada:"
 type: "tech"
 topics: []
-published: false
+published: true
 ---
 
 
@@ -18,9 +18,6 @@ published: false
 - **Language:** TypeScript
 - **CI/CD:** GitHub Actions (Cron実行)
 - **Infrastructure:** Notion API / Zenn CLI
-
-・・・
-
 
 ---
 
