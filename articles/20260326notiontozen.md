@@ -236,18 +236,17 @@ GitHub Actionsの手動実行（workflow_dispatch）またはCron設定で、Zen
 - 問題などあれば、こちらへコメントしてもらえれば、調整できる可能性あります。
 - 最悪、ローカルで編集してアップでも可能だとは思います。多分生成AIに聞けば結構教えてくれると思います。
 
-### 参考資料
+### **参考資料**
 
 
-[link_preview](https://github.com/sickboy0001/NotionToPosts/blob/main/SETUP.md)
+こにちらのReadMeや、Setupは有効化も
 
 
-[link_preview](https://github.com/sickboy0001/NotionToPosts/blob/main/README.md)
+[https://github.com/sickboy0001/NotionToPosts/](https://github.com/sickboy0001/NotionToPosts/)
 
 
-### 宣伝・・
+### **宣伝・・**
 
 
-
-[bookmark](https://choitamelab.vercel.app/)
+[https://choitamelab.vercel.app/](https://choitamelab.vercel.app/)
 
