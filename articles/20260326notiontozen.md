@@ -242,11 +242,11 @@ GitHub Actionsの手動実行（workflow_dispatch）またはCron設定で、Zen
 こにちらのReadMeや、Setupは有効化も
 
 
-[https://github.com/sickboy0001/NotionToPosts/](https://github.com/sickboy0001/NotionToPosts/)
+- [NotionToPosts](https://github.com/sickboy0001/NotionToPosts/)
 
 
-### **宣伝・・**
+### **宣伝・**
 
 
-[https://choitamelab.vercel.app/](https://choitamelab.vercel.app/)
+- [choitamelab](https://choitamelab.vercel.app/)
 
