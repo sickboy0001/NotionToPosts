@@ -40,39 +40,30 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          # デバッグ：現在のディレクトリと articles/ の状態を確認
+          # デバッグ情報
           echo "=== Current directory ==="
           pwd
-          echo "=== articles/ directory contents ==="
-          ls -la articles/ 2>/dev/null || echo "articles/ directory not found"
-          echo "=== git status before ==="
-          git status
+          echo "=== articles/ directory ==="
+          ls -la articles/ 2>/dev/null || echo "articles/ not found"
+          echo "=== images/ directory ==="
+          ls -la images/ 2>/dev/null || echo "images/ not found"
 
-          # git status で変更があるか確認
-          if git status --porcelain | grep -q .; then
-            echo "Changes detected:"
+          # 強制的に articles/, public/, images/ を追加
+          echo "=== Adding files ==="
+          git add articles/ 2>/dev/null || true
+          git add public/ 2>/dev/null || true
+          git add images/ 2>/dev/null || true
+
+          # ステージされた変更を確認
+          if git diff --cached --quiet; then
+            echo "No staged changes to commit"
+            echo "=== git status ==="
             git status
-
-            # 変更が含まれるディレクトリのみ追加する（存在しないディレクトリは failure 回避）
-            git add articles/ 2>/dev/null || true
-            git add public/ 2>/dev/null || true
-            git add images/ 2>/dev/null || true
-
-            if git diff --cached --quiet; then
-              echo "No staged changes to commit"
-            else
-              git commit -m "chore: sync notion articles"
-              git push
-            fi
           else
-            echo "No changes detected by git status --porcelain"
-            echo "=== Checking if articles exist ==="
-            if [ -d "articles" ] && [ "$(ls -A articles 2>/dev/null)" ]; then
-              echo "articles/ directory exists with files:"
-              ls -la articles/
-            else
-              echo "articles/ directory is empty or does not exist"
-            fi
+            echo "Changes staged:"
+            git diff --cached --stat
+            git commit -m "chore: sync notion articles"
+            git push
           fi
 
       - name: Publish to Qiita
