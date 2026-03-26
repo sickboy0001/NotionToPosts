@@ -6,7 +6,7 @@ env:
 on:
   workflow_dispatch:
   schedule:
-    # 30分おきに実行
+    # 30 分おきに実行
     - cron: "*/30 * * * *"
 
 permissions:
@@ -40,10 +40,12 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          if git diff --quiet; then
-            echo "No changes detected"
-          else
-            # 変更が含まれるディレクトリのみ追加する（存在しないディレクトリはfailure回避）
+          # git status で変更があるか確認
+          if git status --porcelain | grep -q .; then
+            echo "Changes detected:"
+            git status
+
+            # 変更が含まれるディレクトリのみ追加する（存在しないディレクトリは failure 回避）
             git add articles/ 2>/dev/null || true
             git add public/ 2>/dev/null || true
             git add images/ 2>/dev/null || true
@@ -54,6 +56,8 @@ jobs:
               git commit -m "chore: sync notion articles"
               git push
             fi
+          else
+            echo "No changes detected"
           fi
 
       - name: Publish to Qiita
