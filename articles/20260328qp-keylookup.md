@@ -1,6 +1,6 @@
 ---
 title: "SQL Server における Key Lookup の仕組みと対処法"
-emoji: ":chart_increasing:"
+emoji: "📈"
 type: "tech"
 topics: []
 published: false
@@ -381,7 +381,7 @@ Key Lookup のコストは小さく、多くの場合は許容されます。
 ## 補足
 
 
-クエリプランの保管場所
+クエリプランの保管場所・・
 
 
 https://queryplansharev5.vercel.app/dashboard
