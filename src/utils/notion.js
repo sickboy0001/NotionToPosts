@@ -489,7 +489,25 @@ export async function getPublishedArticles(databaseId, options = {}) {
 export function extractMetadata(page) {
 const properties = page.properties;
 
-const topics = properties.Topics?.multi_select?.map(t => t.name) || [];
+// デバッグ：Topics プロパティの構造を確認
+console.log('=== Topics Property Debug ===');
+console.log('Full Topics object:', JSON.stringify(properties.Topics, null, 2));
+
+// Topics プロパティの構造を柔軟に処理
+let topics = [];
+if (properties.Topics) {
+  if (Array.isArray(properties.Topics.multi_select)) {
+    topics = properties.Topics.multi_select.map(t => t.name);
+    console.log('Extracted from multi_select array:', topics);
+  } else if (properties.Topics.type === 'multi_select' && Array.isArray(properties.Topics[properties.Topics.type])) {
+    topics = properties.Topics[properties.Topics.type].map(t => t.name);
+    console.log('Extracted from type-based array:', topics);
+  } else {
+    console.log('Topics structure not recognized, using empty array');
+  }
+}
+console.log('Final topics:', topics);
+console.log('=========================');
 
 return {
 id: page.id,
