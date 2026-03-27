@@ -90,4 +90,4 @@ Notionを執筆エディタとし、GitHub Actionsを通じてZennおよびQiita
 
 
 
-次は、**Notion側のデータベースIDやトークンなどの値を実際に取得して、RooCodeに入力する準備**を始めますか？
+次は、**Notion側のデータベースIDやトークンなどの値を実際に取得して、RooCodeに入力する準備

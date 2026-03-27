@@ -35,11 +35,15 @@ export async function convertToMarkdown(pageId) {
  * Zenn用フロントマター生成
  */
 export function generateZennFrontmatter(metadata) {
-  return `---
+const topics = metadata.topics && metadata.topics.length > 0
+  ? metadata.topics.map(t => `"${t}"`).join(', ')
+  : '';
+
+return `---
 title: "${metadata.title.replace(/"/g, '\\"')}"
 emoji: "${metadata.emoji}"
 type: "${metadata.type}"
-topics: [${metadata.topics.map(t => `"${t}"`).join(', ')}]
+${topics ? `topics: [${topics}]` : 'topics: []'}
 published: ${metadata.published ? 'true' : 'false'}
 ---
 

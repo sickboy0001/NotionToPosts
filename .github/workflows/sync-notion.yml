@@ -35,6 +35,76 @@ jobs:
           QIITA_TOKEN: ${{ secrets.QIITA_TOKEN }}
         run: npm run sync
 
+      - name: Update GitHub repository topics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: |
+          node -e "
+            const { Client } = require('@notionhq/client');
+            const notion = new Client({ auth: process.env.NOTION_TOKEN });
+            const databaseId = process.env.NOTION_DATABASE_ID;
+            
+            async function updateTopics() {
+              try {
+                const response = await notion.databases.query({
+                  database_id: databaseId,
+                  filter: {
+                    or: [
+                      { property: 'Published', checkbox: { equals: true } },
+                      { property: 'Commit', checkbox: { equals: true } }
+                    ]
+                  },
+                  pages: { size: 100 }
+                });
+                
+                const topicsSet = new Set();
+                for (const page of response.results) {
+                  const topics = page.properties.Topics?.multi_select?.map(t => t.name) || [];
+                  topics.forEach(topic => {
+                    // GitHub topics の形式に変換（小文字、スペースをハイフン、特殊文字を除去）
+                    let normalized = topic.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    if (normalized.length > 0 && normalized.length <= 30) {
+                      topicsSet.add(normalized);
+                    }
+                  });
+                }
+                
+                const topics = Array.from(topicsSet).slice(0, 20);
+                console.log('Topics to set:', topics);
+                
+                if (topics.length === 0) {
+                  console.log('No topics found in Notion articles');
+                  return;
+                }
+                
+                const repo = process.env.GITHUB_REPOSITORY;
+                const [owner, repoName] = repo.split('/');
+                
+                const updateResponse = await fetch(\`https://api.github.com/repos/\${owner}/\${repoName}/topics\`, {
+                  method: 'PUT',
+                  headers: {
+                    'Authorization': \`token \${process.env.GITHUB_TOKEN}\`,
+                    'Accept': 'application/vnd.github.mercy-preview+json',
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ names: topics })
+                });
+                
+                if (updateResponse.ok) {
+                  console.log('✓ GitHub topics updated successfully');
+                } else {
+                  console.error('✗ Failed to update GitHub topics:', await updateResponse.text());
+                }
+              } catch (error) {
+                console.error('✗ Error updating topics:', error.message);
+              }
+            }
+            
+            updateTopics();
+          "
+
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
