@@ -3,7 +3,7 @@ title: "SQL Server における Key Lookup の仕組みと対処法"
 emoji: "📈"
 type: "tech"
 topics: ["SQL", "SqlServer", "QueryPlan"]
-published: false
+published: true
 ---
 
 
