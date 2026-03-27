@@ -384,5 +384,5 @@ Key Lookup のコストは小さく、多くの場合は許容されます。
 クエリプランの保管場所
 
 
-[bookmark](https://queryplansharev5.vercel.app/dashboard)
+[https://queryplansharev5.vercel.app/dashboard](https://queryplansharev5.vercel.app/dashboard)
 
