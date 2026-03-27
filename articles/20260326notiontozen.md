@@ -2,7 +2,7 @@
 title: "Notionで書いた記事をGitHub Actions経由でZennに自動投稿する仕組みを作ってみた"
 emoji: "🎉"
 type: "tech"
-topics: []
+topics: ["Github", "Notion", "GitHubAcction"]
 published: true
 ---
 
