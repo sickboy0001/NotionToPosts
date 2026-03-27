@@ -436,34 +436,41 @@ export async function getPublishedArticles(databaseId, options = {}) {
     const articles = [];
 
     while (hasMore) {
-      const response = await notion.databases.query({
-        database_id: databaseId,
-        filter: {
-          or: [
-            {
-              property: 'Published',
-              checkbox: {
-                equals: true
-              }
-            },
-            {
-              property: 'Commit',
-              checkbox: {
-                equals: true
-              }
-            }
-          ]
-        },
-        sorts: [
-          {
-            timestamp: 'last_edited_time',
-            direction: 'descending'
-          }
-        ],
-        start_cursor: startCursor
-      });
-
-      articles.push(...response.results);
+    const response = await notion.databases.query({
+    database_id: databaseId,
+    filter: {
+    or: [
+    {
+    property: 'Published',
+    checkbox: {
+    equals: true
+    }
+    },
+    {
+    property: 'Commit',
+    checkbox: {
+    equals: true
+    }
+    }
+    ]
+    },
+    sorts: [
+    {
+    timestamp: 'last_edited_time',
+    direction: 'descending'
+    }
+    ],
+    start_cursor: startCursor
+    });
+    
+    // デバッグ：初回のみプロパティ名を確認
+    if (articles.length === 0 && response.results.length > 0) {
+      console.log('=== Notion Database Properties ===');
+      console.log('Property names:', Object.keys(response.results[0].properties));
+      console.log('Full first page properties:', JSON.stringify(response.results[0].properties, null, 2));
+    }
+    
+    articles.push(...response.results);
       hasMore = response.has_more;
       startCursor = response.next_cursor;
 
