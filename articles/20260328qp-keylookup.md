@@ -140,7 +140,7 @@ WHERE Email = 'user500@example.com';
 そのため、**インデックスに保持されている** **`MemberID`** **をキーにして、クラスタ化インデックス（テーブル本体）へ戻る必要があり、Key Lookup が発生します。**
 
 
-![image.png](/images/image.png)
+![2026-03-28_044335.png](/images/2026-03-28_044335.png)
 
 
 [https://queryplansharev5.vercel.app/qpposts/lFfryu](https://queryplansharev5.vercel.app/qpposts/lFfryu)
@@ -172,7 +172,7 @@ WHERE Email = 'user500@example.com';
 これは、**非クラスタ化インデックスだけでクエリが完結しているため**です。
 
 
-![image.png](/images/image.png)
+![2026-03-28_044243.png](/images/2026-03-28_044243.png)
 
 
 [https://queryplansharev5.vercel.app/qpposts/XwSoNs](https://queryplansharev5.vercel.app/qpposts/XwSoNs)
@@ -347,13 +347,13 @@ SQL Server は
 **実際には大量実行されていた**、という典型的なパターンです。
 
 
-![image.png](/images/image.png)
-
-
-![image.png](/images/image.png)
-
-
 ---
+
+
+![2026-03-28_042213.png](/images/2026-03-28_042213.png)
+
+
+![2026-03-28_042805.png](/images/2026-03-28_042805.png)
 
 
 [https://queryplansharev5.vercel.app/qpposts/7K9taS](https://queryplansharev5.vercel.app/qpposts/7K9taS)
