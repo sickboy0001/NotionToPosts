@@ -24,13 +24,13 @@ export async function convertToMarkdown(pageId) {
       throw new Error('Could not convert Notion content to markdown string');
     }
 
-    // [bookmark](url) の形式で1行にそれしかない場合、urlのみに置換
+    // [bookmark](url) または [link_preview](url) の形式で1行にそれしかない場合、urlのみに置換
     // 前後に文字がある場合は対象外とする
     const processedMarkdown = markdown.split('\n').map(line => {
       const trimmedLine = line.trim();
-      const bookmarkMatch = trimmedLine.match(/^\[bookmark\]\((https?:\/\/[^)]+)\)$/);
+      const bookmarkMatch = trimmedLine.match(/^\[(bookmark|link_preview)\]\((https?:\/\/[^)]+)\)$/);
       if (bookmarkMatch) {
-        return bookmarkMatch[1];
+        return bookmarkMatch[2];
       }
       return line;
     }).join('\n');
