@@ -236,3 +236,9 @@ Pull Requestも歓迎します。
 ---
 
 **注意**: `.env` ファイルに機密情報を含むため、**必ず `.gitignore` に追加されていることを確認してください**。
+
+
+## 歴
+- 2026/04/02
+  - Notion [bookmark](http//・・・・)をGitHub上はhttp//・・・・へ返還
+  - NotionのBookmarkの動きを省いて、Zennでの返還を期待・・・

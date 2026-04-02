@@ -24,7 +24,18 @@ export async function convertToMarkdown(pageId) {
       throw new Error('Could not convert Notion content to markdown string');
     }
 
-    return markdown;
+    // [bookmark](url) の形式で1行にそれしかない場合、urlのみに置換
+    // 前後に文字がある場合は対象外とする
+    const processedMarkdown = markdown.split('\n').map(line => {
+      const trimmedLine = line.trim();
+      const bookmarkMatch = trimmedLine.match(/^\[bookmark\]\((https?:\/\/[^)]+)\)$/);
+      if (bookmarkMatch) {
+        return bookmarkMatch[1];
+      }
+      return line;
+    }).join('\n');
+
+    return processedMarkdown;
   } catch (error) {
     console.error(`Failed to convert page ${pageId} to markdown:`, error);
     throw error;
