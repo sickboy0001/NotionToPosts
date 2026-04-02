@@ -242,3 +242,4 @@ Pull Requestも歓迎します。
 - 2026/04/02
   - Notion [bookmark](http//・・・・)をGitHub上はhttp//・・・・へ返還
   - NotionのBookmarkの動きを省いて、Zennでの返還を期待・・・
+  - 同様に「link_preview」も対応
